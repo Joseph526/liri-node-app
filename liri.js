@@ -10,12 +10,24 @@ var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 // Capture input from CLI
-var args = process.argv[2];
+var args = process.argv;
+
 
 // Declare functions
 var liri = {
+    spotifyThisSong: function() {
+        console.log("Spotify object working");
+    },
     movieThis: function() {
-        var movieName = process.argv[3];
+        var movieName = "";
+        if (!args[3]) {
+            movieName = "Mr. Nobody";
+        }
+        else {
+            for (var i = 3; i < args.length; i++) {
+                movieName += args[i] + "+";
+            }
+        }
         var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
         request(queryUrl, function(error, response, body) {
             if (!error && response.statusCode === 200) {
@@ -36,12 +48,13 @@ var liri = {
 };
 
 // Execute appropriate switch case
-switch (args) {
+switch (args[2]) {
     case "my-tweets":
         console.log("Twitter function under construction");
         break;
     case "spotify-this-song":
-        console.log("Spotify this");
+        console.log("============\nSpotify this\n============");
+        liri.spotifyThisSong();
         break;
     case "movie-this":
         console.log("==========\nMovie this\n==========");
@@ -51,5 +64,5 @@ switch (args) {
         console.log("Do what it says");
         break;
     default:
-        console.log("Command not defined");
+        console.log("Command not defined. Please try again.");
 }
