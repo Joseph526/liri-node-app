@@ -4,6 +4,7 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
+var fs = require("fs");
 
 // Declare new instance of each API
 var spotify = new Spotify(keys.spotify);
@@ -19,17 +20,25 @@ for (var i = 3; i < args.length; i++) {
 // Declare functions
 var liri = {
     spotifyThisSong: function() {
-        console.log("Spotify object working");
+        if (!args[3]) {
+            appInput = "The+Sign";
+        }
         spotify.search({ type: 'track', query: appInput }, function(err, data) {
             if (err) {
                 return console.log('Error occurred: ' + err);
             }
-            console.log(data);
+            var songInfo = data.tracks.items[0];
+            console.log(
+                "Artist(s): " + songInfo.album.artists[0].name +
+                "\nTitle: " + songInfo.name +
+                "\nPreview link: " + songInfo.album.preview_url +
+                "\nAlbum: " + songInfo.album.name
+            );
         });
     },
     movieThis: function() {
         if (!args[3]) {
-            appInput = "Mr. Nobody";
+            appInput = "Mr.+Nobody";
         }
         var queryUrl = "http://www.omdbapi.com/?t=" + appInput + "&y=&plot=short&apikey=trilogy";
         request(queryUrl, function(error, response, body) {
