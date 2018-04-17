@@ -20,9 +20,12 @@ for (var i = 3; i < args.length; i++) {
 // Declare functions
 var liri = {
     spotifyThisSong: function() {
+        // Default input
         if (!args[3]) {
             appInput = "The+Sign";
         }
+
+        // API query and output
         spotify.search({ type: 'track', query: appInput }, function(err, data) {
             if (err) {
                 return console.log('Error occurred: ' + err);
@@ -37,9 +40,12 @@ var liri = {
         });
     },
     movieThis: function() {
+        // Default input
         if (!args[3]) {
             appInput = "Mr.+Nobody";
         }
+
+        // API query and output
         var queryUrl = "http://www.omdbapi.com/?t=" + appInput + "&y=&plot=short&apikey=trilogy";
         request(queryUrl, function(error, response, body) {
             if (!error && response.statusCode === 200) {
@@ -56,6 +62,13 @@ var liri = {
                 );
             }
         });
+    },
+    doWhatItSays: function() {
+        fs.readFile("random.txt", "utf8", function(error, data) {
+            var contents = data.split(",");
+            var command = contents[0];
+            var input = contents[1];
+        })
     }
 };
 
@@ -73,7 +86,8 @@ switch (args[2]) {
         liri.movieThis();
         break;
     case "do-what-it-says":
-        console.log("Do what it says");
+        console.log("===============\nDo what it says\n===============");
+        liri.doWhatItSays();
         break;
     default:
         console.log("Command not defined. Please try again.");
