@@ -11,24 +11,27 @@ var client = new Twitter(keys.twitter);
 
 // Capture input from CLI
 var args = process.argv;
-
+var appInput = "";
+for (var i = 3; i < args.length; i++) {
+    appInput += args[i] + "+";
+}
 
 // Declare functions
 var liri = {
     spotifyThisSong: function() {
         console.log("Spotify object working");
+        spotify.search({ type: 'track', query: appInput }, function(err, data) {
+            if (err) {
+                return console.log('Error occurred: ' + err);
+            }
+            console.log(data);
+        });
     },
     movieThis: function() {
-        var movieName = "";
         if (!args[3]) {
-            movieName = "Mr. Nobody";
+            appInput = "Mr. Nobody";
         }
-        else {
-            for (var i = 3; i < args.length; i++) {
-                movieName += args[i] + "+";
-            }
-        }
-        var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+        var queryUrl = "http://www.omdbapi.com/?t=" + appInput + "&y=&plot=short&apikey=trilogy";
         request(queryUrl, function(error, response, body) {
             if (!error && response.statusCode === 200) {
                 var movieInfo = JSON.parse(body);
